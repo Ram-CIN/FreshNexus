@@ -3,6 +3,16 @@ import { CartProvider } from "@/components/CartContext";
 import Header from "@/components/Header";
 import { Suspense } from "react";
 
+
+export const metadata = {
+  title: "Fresh Nexus",
+  description:
+    "Fresh Nexus food app",
+  alternates: {
+    canonical: "/analytics",
+  },
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
