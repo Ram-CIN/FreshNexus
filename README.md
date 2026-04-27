@@ -1,38 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# FreshNexus
 
-## Getting Started
+FreshNexus is a grocery catalog built with Next.js. The app lets users browse products, search and filter the catalog, open product detail pages, view market insights, and add products to a small cart dropdown in the header.
 
-First, run the development server:
+## Architectural Notes
+
+### SEO
+
+I used the Next.js App Router because the main catalog and product detail pages benefit from server-rendered content. Product data is fetched on the server from Open Food Facts, so search engines can receive meaningful HTML instead of waiting for the browser to build the page after load.
+
+The root layout defines default metadata for the app, while the dynamic product route has its own `generateMetadata` function. That product metadata is built from the actual product name, brand, size, category, nutrition grade, and image. This makes each product page easier to understand when shared or indexed, instead of every page having the same generic title and description.
+
+The catalog uses query parameters for search, category, and pagination. That keeps URLs readable and shareable, for example a filtered catalog page can be opened directly without losing state. The product detail route also supports lookup by product code or slug, which gives the page a stable URL shape while still allowing fallback search behavior.
+
+### Data Persistence
+
+Most product and analytics data is treated as live external data. The app fetches product results, product details, news, and exchange-rate information from APIs instead of storing a copied product database inside the project. This keeps the demo lightweight and avoids stale local data.
+
+For the cart, I used a React context provider in `CartContext`. The cart is shared across the header and product cards, so clicking the plus button can immediately update the cart count and open the dropdown. This state is currently stored in memory only. That is intentional for this version because there is no login, checkout, or backend user session yet.
+
+If FreshNexus became a production ecommerce app, the next step would be to persist the cart in `localStorage` for guests and in a database for signed-in users. For now, keeping the cart client-side makes the UI fast and simple without adding backend complexity that the current feature set does not need.
+
+## Running Locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-"# FreshNexus" 
-"# FreshNexus" 
+Then open `http://localhost:3000`.
